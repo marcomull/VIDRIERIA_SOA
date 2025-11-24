@@ -1,0 +1,192 @@
+version: '3.8'
+
+services:
+
+  redis-cache:
+    image: redis:6.2-alpine
+    container_name: vidrieria-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379" 
+    networks:
+      - vidrieria-net
+
+  db-mysql:
+    image: mysql:8.0
+    container_name: vidrieria-mysql
+    restart: unless-stopped
+    env_file: .env 
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} 
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3307:3306" 
+    volumes:
+      - mysql-data:/var/lib/mysql 
+      - ./vidrieria_sql.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - vidrieria-net
+
+  servicio-eureka:
+    build:
+      context: ./vidrieria-api_eureka
+      args:
+        JAR_FILE: target/servicio-eureka-0.0.1-SNAPSHOT.jar
+        EXPOSE_PORT: 8761
+    container_name: servicio-eureka
+    restart: unless-stopped
+    ports:
+      - "8761:8761"
+    env_file: .env
+    environment:
+      - EUREKA_HOST=${EUREKA_HOST}
+      - EUREKA_PORT=${EUREKA_PORT}
+    networks:
+      - vidrieria-net
+
+  servicio-usuarios:
+    build:
+      context: ./vidrieria-api_usuarios
+      args:
+        JAR_FILE: target/servicio-usuarios-0.0.1-SNAPSHOT.jar 
+        EXPOSE_PORT: 8080
+    container_name: servicio-usuarios
+    restart: unless-stopped
+    depends_on:
+      - db-mysql 
+      - servicio-eureka 
+      - redis-cache
+    ports:
+      - "8080:8080"
+    env_file: .env 
+    environment:
+      - DB_HOST=db-mysql 
+      - DB_PORT=3306
+      - EUREKA_HOST=servicio-eureka
+      - EUREKA_PORT=8761
+      - DB_NAME=${MYSQL_DATABASE}  
+    networks:
+      - vidrieria-net
+
+  servicio-productos:
+    build:
+      context: ./vidrieria-api_productos
+      args:
+        JAR_FILE: target/servicio-productos-0.0.1-SNAPSHOT.jar 
+        EXPOSE_PORT: 8081
+    container_name: servicio-productos
+    restart: unless-stopped
+    depends_on:
+      - db-mysql
+      - servicio-eureka
+      - redis-cache
+    ports:
+      - "8081:8081"
+    env_file: .env
+    environment:
+      - DB_HOST=db-mysql
+      - DB_PORT=3306
+      - EUREKA_HOST=servicio-eureka
+      - EUREKA_PORT=8761
+      - DB_NAME=${MYSQL_DATABASE}  
+    networks:
+      - vidrieria-net
+
+  servicio-inventariado:
+    build:
+      context: ./vidrieria-api_inventariado
+      args:
+        JAR_FILE: target/servicio-inventariado-0.0.1-SNAPSHOT.jar 
+        EXPOSE_PORT: 8082
+    container_name: servicio-inventariado
+    restart: unless-stopped
+    depends_on:
+      - db-mysql
+      - servicio-eureka
+      - servicio-usuarios
+      - redis-cache
+    ports:
+      - "8082:8082"
+    env_file: .env
+    environment:
+      - DB_HOST=db-mysql
+      - DB_PORT=3306
+      - EUREKA_HOST=servicio-eureka
+      - EUREKA_PORT=8761
+      - USUARIOS_API_URL=${USUARIOS_API_URL} 
+      - DB_NAME=${MYSQL_DATABASE}  
+    networks:
+      - vidrieria-net
+
+  servicio-gateway:
+    build:
+      context: ./vidrieria-api_gateway
+      args:
+        JAR_FILE: target/servicio-gateway-0.0.1-SNAPSHOT.jar 
+        EXPOSE_PORT: 8000
+    container_name: servicio-gateway
+    restart: unless-stopped
+    depends_on: 
+      - servicio-eureka
+      - servicio-usuarios
+      - servicio-productos
+      - servicio-inventariado
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      - EUREKA_HOST=servicio-eureka
+      - EUREKA_PORT=8761
+    networks:
+      - vidrieria-net
+
+  frontend-app:
+    build:
+      context: ./vidrieria-app_devisur
+    container_name: frontend-app
+    restart: unless-stopped
+    depends_on:
+      - servicio-gateway 
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_GATEWAY_URL=http://servicio-gateway:8000
+      - NODE_ENV=production
+    networks:
+      - vidrieria-net
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090" 
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - vidrieria-net
+    depends_on:
+      - servicio-eureka
+      - servicio-usuarios
+      - servicio-productos
+      - servicio-inventariado
+      - servicio-gateway
+      - redis-cache
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "4000:3000" 
+    networks:
+      - vidrieria-net
+    depends_on:
+      - prometheus
+
+networks:
+  vidrieria-net:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local

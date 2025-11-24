@@ -1,0 +1,13 @@
+# Ignora la carpeta de build local de Maven
+target
+
+# Ignora archivos de Git
+.git
+.gitignore
+
+# Archivos de configuración de IDE (IntelliJ, Eclipse, etc.)
+.idea
+*.iml
+.settings
+.classpath
+.project

@@ -1,0 +1,29 @@
+global:
+  scrape_interval: 15s 
+
+scrape_configs:
+  
+  - job_name: 'servicio-eureka'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['servicio-eureka:8761']
+
+  - job_name: 'servicio-usuarios'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['servicio-usuarios:8080']
+
+  - job_name: 'servicio-productos'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['servicio-productos:8081']
+
+  - job_name: 'servicio-inventariado'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['servicio-inventariado:8082']
+
+  - job_name: 'servicio-gateway'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['servicio-gateway:8000']

@@ -1,0 +1,32 @@
+{
+  "id": "e183-uuid-falso",
+  "name": "CI Environment",
+  "values": [
+    {
+      "key": "baseURL",
+      "value": "http://localhost:8000",
+      "enabled": true
+    },
+    {
+        "key": "baseURL1", 
+        "value": "http://localhost:8000", 
+        "enabled": true 
+    },
+    {
+        "key": "baseURL2", 
+        "value": "http://localhost:8000", 
+        "enabled": true 
+    },
+    {
+        "key": "baseURL3", 
+        "value": "http://localhost:8000", 
+        "enabled": true 
+    },
+    {
+        "key": "baseURL4", 
+        "value": "http://localhost:8000", 
+        "enabled": true 
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}

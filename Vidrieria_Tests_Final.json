@@ -1,0 +1,908 @@
+{
+	"info": {
+		"_postman_id": "863d0a86-a101-48b4-b1d3-39532d91d7fc",
+		"name": "Generated from HAR",
+		"description": "HAR To Postman Generated Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48004687"
+	},
+	"item": [
+		{
+			"name": "localhost:8000/login/usuario",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.remove('Authorization');"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Login exitoso\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"auth_token\", jsonData.token); \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "User-Agent",
+						"value": "insomnia/11.6.1"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"correo\": \"{{test_email}}\",\r\n\t\"contrasena\": \"{{test_password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/login/usuario",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"login",
+						"usuario"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "successfully / 200",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL3}}/login/usuario",
+							"host": [
+								"{{baseURL3}}"
+							],
+							"path": [
+								"login",
+								"usuario"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "transfer-encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 13 Nov 2025 01:02:10 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "application/json;charset=UTF-8 content type is not supported in the response body"
+				}
+			]
+		},
+		{
+			"name": "localhost:8000/api/v1/historial/vidrio/7",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "insomnia/12.0.0"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/historial/vidrio/7",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"historial",
+						"vidrio",
+						"7"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "successfully / 200",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiQURNSU4iLCJpZCI6MzcsInN1YiI6Im1hcmNvYXJpYXM3NjVAZ21haWwuY29tIiwiaWF0IjoxNzYyNzkxOTg2LCJleHAiOjE3NjI4NzgzODZ9.XmhoR9HcW4QyYsuZZ-ByjgPC1hyAMnCX3z_BgzAQWfAVLPzuxoPARAbFq892r8OL"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/12.0.0"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL1}}/api/v1/historial/vidrio/7",
+							"host": [
+								"{{baseURL1}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"historial",
+								"vidrio",
+								"7"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 10 Nov 2025 16:39:26 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "application/json;charset=UTF-8 content type is not supported in the response body"
+				}
+			]
+		},
+		{
+			"name": "localhost:8000/api/v1/stock/trigger-notification-check",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "User-Agent",
+						"value": "insomnia/12.0.0"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/stock/trigger-notification-check",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"stock",
+						"trigger-notification-check"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "successfully / 200",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiQURNSU4iLCJpZCI6MzcsInN1YiI6Im1hcmNvYXJpYXM3NjVAZ21haWwuY29tIiwiaWF0IjoxNzYyNzIxODI2LCJleHAiOjE3NjI4MDgyMjZ9.kDj6mOv6KU4MU1k3vFiMq1zjWMCrAXgU8Z9VzPu20cF4ISwVHKseoV_ux-Nrbg8E"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/12.0.0"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL1}}/api/v1/stock/trigger-notification-check",
+							"host": [
+								"{{baseURL1}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"stock",
+								"trigger-notification-check"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "64"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 09 Nov 2025 21:00:26 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "text/plain;charset=UTF-8 content type is not supported in the response body"
+				}
+			]
+		},
+		{
+			"name": "localhost:8000/api/v1/stock/vidrios",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "User-Agent",
+						"value": "insomnia/12.0.0"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/v1/stock/vidrios",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"stock",
+						"vidrios"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "successfully / 200",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiQURNSU4iLCJpZCI6MzcsInN1YiI6Im1hcmNvYXJpYXM3NjVAZ21haWwuY29tIiwiaWF0IjoxNzYyOTk1NzMwLCJleHAiOjE3NjMwODIxMzB9.0aaU0jtPse_FJkD3aqqXq4C36edfh88_kamBy9PLbz24DCm3f5afxC_nobQsUUjo"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/12.0.0"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL3}}/api/v1/stock/vidrios",
+							"host": [
+								"{{baseURL3}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"stock",
+								"vidrios"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "transfer-encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 13 Nov 2025 01:10:24 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "application/json;charset=UTF-8 content type is not supported in the response body"
+				}
+			]
+		},
+		{
+			"name": "localhost:8000/catalogo/materiales",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "User-Agent",
+						"value": "insomnia/11.6.1"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/catalogo/materiales",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"catalogo",
+						"materiales"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "successfully / 200",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiQURNSU4iLCJpZCI6MzcsInN1YiI6Im1hcmNvYXJpYXM3NjVAZ21haWwuY29tIiwiaWF0IjoxNzYyOTk1NzMwLCJleHAiOjE3NjMwODIxMzB9.0aaU0jtPse_FJkD3aqqXq4C36edfh88_kamBy9PLbz24DCm3f5afxC_nobQsUUjo"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL3}}/materiales",
+							"host": [
+								"{{baseURL3}}"
+							],
+							"path": [
+								"materiales"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "transfer-encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 13 Nov 2025 01:07:20 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "application/json;charset=UTF-8 content type is not supported in the response body"
+				}
+			]
+		},
+		{
+			"name": "localhost:8000/usuarios/listUsers",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "insomnia/11.6.1"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/usuarios/listUsers",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"usuarios",
+						"listUsers"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "successfully / 200",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiQURNSU4iLCJpZCI6MjEsInN1YiI6Im1hcmNvYXJpYXM3NjVAZ21haWwuY29tIiwiaWF0IjoxNzU5OTY3ODk3LCJleHAiOjE3NjAwNTQyOTd9.6zhNSLnQ_Kb7ZqaJdRcD1gBmwxcvX7qHupabmbp87QJlnW1uYWtbFdme3CL9dIrG"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL2}}/usuarios/listUsers",
+							"host": [
+								"{{baseURL2}}"
+							],
+							"path": [
+								"usuarios",
+								"listUsers"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 09 Oct 2025 19:34:41 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "application/json;charset=UTF-8 content type is not supported in the response body"
+				}
+			]
+		},
+		{
+			"name": "localhost:8000/login/logout",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "insomnia/12.0.0"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/login/logout",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"login",
+						"logout"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "successfully / 200",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiQURNSU4iLCJpZCI6MzcsInN1YiI6Im1hcmNvYXJpYXM3NjVAZ21haWwuY29tIiwiaWF0IjoxNzYyNzE3MDMwLCJleHAiOjE3NjI4MDM0MzB9.UrGJhAQpW3oZNBqmLyVVoL-hvbpsbHKJl6Q2AA1m-HfhD0Qll53r_lsqq1IMCyeU"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/12.0.0"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL2}}/login/logout",
+							"host": [
+								"{{baseURL2}}"
+							],
+							"path": [
+								"login",
+								"logout"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "29"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 09 Nov 2025 20:19:54 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "text/plain;charset=UTF-8 content type is not supported in the response body"
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": ""
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

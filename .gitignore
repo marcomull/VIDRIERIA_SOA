@@ -1,0 +1,14 @@
+# Archivo de credenciales, nunca debe ser publicado
+.env
+
+# Directorios de compilación (Java/Maven) y dependencias (Node)
+target/
+build/
+**/node_modules/
+*.jar
+
+# Archivos de IDEs
+.idea/
+.vscode/
+*.iml
+.DS_Store
