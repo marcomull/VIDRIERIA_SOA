@@ -8,11 +8,8 @@ import { getCurrentUser, type UserRole, getToken } from "@/lib/auth";
 import {
   LayoutDashboard, Users, Package, Layers, Glasses, ShoppingBag,
   UserCircle, UserPlus, User as ClientUserIcon, ShoppingCart, History,
-  Box, Wrench, AlertTriangle, Warehouse, Ruler
+  Warehouse, Ruler
 } from "lucide-react";
-
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { checkLowStockStatus } from "@/services/inventario/stockService";
 
 interface NavItem {
   href: string;
@@ -55,9 +52,6 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
   const user = getCurrentUser();
   const token = getToken();
 
-  const [lowStockCount, setLowStockCount] = useState(0);
-  const [isLoadingAlert, setIsLoadingAlert] = useState(true);
-
   let navItems: NavItem[] = [];
 
   if (user) {
@@ -80,25 +74,6 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
       default:
         navItems = [];
     }
-
-    useEffect(() => {
-      // Solo los admins y personal de almacén necesitan ver la alerta
-      if ((user?.rol === 'ADMIN' || user?.rol === 'ALMACEN') && token) {
-        setIsLoadingAlert(true);
-        checkLowStockStatus(token)
-          .then(data => {
-            setLowStockCount(data.lowStockItemCount || 0);
-          })
-          .catch(err => {
-            console.error("Error al verificar stock bajo:", err);
-          })
-          .finally(() => {
-            setIsLoadingAlert(false);
-          });
-      } else {
-        setIsLoadingAlert(false);
-      }
-    }, [user, token]);
   }
 
   return (
@@ -126,16 +101,6 @@ export function DashboardLayout({ children, title }: DashboardLayoutProps) {
             </nav>
           </aside>
           <main>
-            {!isLoadingAlert && lowStockCount > 0 && (
-              <Alert variant="destructive" className="mb-6">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>¡Alerta de Inventario!</AlertTitle>
-                <AlertDescription>
-                  Tienes {lowStockCount} item(s) con stock bajo o nulo.
-                  Revisa las páginas de stock o contacta a Almacén.
-                </AlertDescription>
-              </Alert>
-            )}
             {children}
           </main>
         </div>

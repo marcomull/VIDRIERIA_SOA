@@ -23,7 +23,7 @@ export default function RegisterPage() {
     telefono: "",
     dni: "",
     ruc: "",
-    direccion: "", 
+    direccion: "",
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,11 +37,16 @@ export default function RegisterPage() {
     setSuccess(null)
 
     try {
-      const response = await axios.post("http://localhost:8080/usuarios/add", formData)
+      const response = await axios.post("http://localhost:8000/usuarios/add", formData)
       setSuccess(response.data)
       setTimeout(() => router.push("/login"), 2000)
     } catch (err: any) {
-      setError(err.response?.data || "Error al registrar usuario.")
+      const errorMsg = err.response?.data;
+      if (typeof errorMsg === 'object') {
+        setError(errorMsg.message || JSON.stringify(errorMsg));
+      } else {
+        setError(errorMsg || "Error al registrar usuario.");
+      }
     } finally {
       setLoading(false)
     }
@@ -99,10 +104,10 @@ export default function RegisterPage() {
               <Label htmlFor="ruc">RUC (opcional)</Label>
               <Input id="ruc" value={formData.ruc} onChange={handleChange} />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="direccion">Dirección</Label>
-              <Input id="direccion" value={formData.direccion} onChange={handleChange} required /> {/* Puedes decidir si es 'required' */}
+              <Input id="direccion" value={formData.direccion} onChange={handleChange} required />
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>

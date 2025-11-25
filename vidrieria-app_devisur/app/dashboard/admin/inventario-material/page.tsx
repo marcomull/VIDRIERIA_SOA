@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle, Loader2 } from "lucide-react";
 import { getToken } from "@/lib/auth";
 import { StockMaterial, Material } from "@/lib/types";
-import { getAllStockMaterial } from "@/services/inventario/stockService";
+import { getAllStockMaterial, checkLowStockStatus } from "@/services/inventario/stockService";
 import { getMaterials } from "@/services/catalogo/materialService";
 import { StockMaterialCard } from "@/components/adminInventario/StockMaterialCard";
 import { HistorialDialog } from "@/components/adminInventario/HistorialDialog";
 import { AddStockMaterialDialog } from "@/components/adminInventario/AddStockMaterialDialog";
 import { EditStockMaterialDialog } from "@/components/adminInventario/EditStockMaterialDialog";
 import { DeleteStockMaterialDialog } from "@/components/adminInventario/DeleteStockMaterialDialog";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 export default function InventarioMaterialPage() {
     const [stock, setStock] = useState<StockMaterial[]>([]);
@@ -27,7 +28,10 @@ export default function InventarioMaterialPage() {
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [selectedStockItem, setSelectedStockItem] = useState<StockMaterial | null>(null);
 
-    const loadData = useCallback(async () => {
+    const [lowStockCount, setLowStockCount] = useState(0);
+    const [needsCleanup, setNeedsCleanup] = useState(false);
+
+    const loadData = useCallback(async (triggeredByUpdate = false) => {
         setIsLoading(true);
         setError(null);
         try {
@@ -39,16 +43,33 @@ export default function InventarioMaterialPage() {
 
             const stockData = await getAllStockMaterial(token);
             setStock(stockData);
+            const status = await checkLowStockStatus(token);
+            setLowStockCount(status.lowStockItemCount || 0);
+
+            if (triggeredByUpdate) {
+                setNeedsCleanup(true);
+            }
         } catch (err) {
             setError(err instanceof Error ? err.message : "Error al cargar datos.");
         } finally {
             setIsLoading(false);
         }
     }, [token]);
-
+    // Carga inicial
     useEffect(() => {
         loadData();
     }, [loadData]);
+    useEffect(() => {
+        // Cierra los diálogos SOLO cuando la carga termina y hay una limpieza pendiente.
+        if (!isLoading && needsCleanup) {
+            setIsAddOpen(false);
+            setIsEditOpen(false);
+            setIsDeleteOpen(false);
+            setIsHistorialOpen(false);
+            setSelectedStockItem(null);
+            setNeedsCleanup(false); // Resetear la bandera
+        }
+    }, [isLoading, needsCleanup]);
 
     // --- Handlers para diálogos ---
     const handleOpenAdd = () => setIsAddOpen(true);
@@ -77,6 +98,10 @@ export default function InventarioMaterialPage() {
         loadData();
     };
 
+    const handleUpdateAndRefresh = () => {
+        loadData(true);
+    };
+
     const handleClose = () => {
         setIsAddOpen(false);
         setIsEditOpen(false);
@@ -97,6 +122,15 @@ export default function InventarioMaterialPage() {
                     Añadir Stock
                 </Button>
             </div>
+
+            {lowStockCount > 0 && !isLoading && (
+                <Alert variant="default" className="mb-4 border-yellow-500 bg-yellow-500/10 text-yellow-800">
+                    <AlertTitle>⚠️ Alerta de Stock Bajo</AlertTitle>
+                    <AlertDescription>
+                        Hay **{lowStockCount}** items (materiales y/o vidrios) con stock bajo. Revise el inventario.
+                    </AlertDescription>
+                </Alert>
+            )}
 
             {isLoading && (
                 <div className="flex justify-center items-center h-64">

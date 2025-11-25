@@ -13,7 +13,7 @@ import java.util.List;
 public class HistorialController {
 
     @Autowired
-    private HistorialAppService appService; // Llama a la capa de Aplicación
+    private HistorialAppService appService; 
 
     @GetMapping("/vidrio/{idStockVidrio}")
     public ResponseEntity<List<MovimientoVidrioDTO>> getHistorialVidrio(@PathVariable Integer idStockVidrio) {

@@ -65,6 +65,13 @@ services:
       - EUREKA_HOST=servicio-eureka
       - EUREKA_PORT=8761
       - DB_NAME=${MYSQL_DATABASE}  
+      - INTERNAL_API_KEY=${INTERNAL_API_KEY}
+      - USUARIOS_API_URL=${USUARIOS_API_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - FACTILIZA_TOKEN=${FACTILIZA_TOKEN}
+      - EMAIL_LIST_VERIFY_APIKEY=${EMAIL_LIST_VERIFY_APIKEY}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
     networks:
       - vidrieria-net
 
@@ -89,6 +96,10 @@ services:
       - EUREKA_HOST=servicio-eureka
       - EUREKA_PORT=8761
       - DB_NAME=${MYSQL_DATABASE}  
+      - JWT_SECRET=${JWT_SECRET}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
     networks:
       - vidrieria-net
 
@@ -114,7 +125,9 @@ services:
       - EUREKA_HOST=servicio-eureka
       - EUREKA_PORT=8761
       - USUARIOS_API_URL=${USUARIOS_API_URL} 
+      - INTERNAL_API_KEY=${INTERNAL_API_KEY}
       - DB_NAME=${MYSQL_DATABASE}  
+      - JWT_SECRET=${JWT_SECRET}
     networks:
       - vidrieria-net
 

@@ -17,8 +17,8 @@ import java.util.List;
 public class UsuarioServiceClient {
 
     private final RestTemplate restTemplate;
-    private final String USUARIOS_API_URL = "http://localhost:8080/usuarios";
-
+    @Value("${usuarios.api.url}")
+    private String usuariosApiUrl;
     @Value("${internal.api.key}")
     private String internalApiKey;
 
@@ -28,7 +28,7 @@ public class UsuarioServiceClient {
 
     public List<UsuarioEmailDto> getUsuariosPorRoles(List<String> roles) {
 
-        String url = USUARIOS_API_URL + "/internal/by-roles?roles=" + String.join(",", roles);
+        String url = usuariosApiUrl + "/internal/by-roles?roles=" + String.join(",", roles);
 
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -40,13 +40,14 @@ public class UsuarioServiceClient {
                     url,
                     HttpMethod.GET,
                     entity,
-                    new ParameterizedTypeReference<List<UsuarioEmailDto>>() {}
-            );
+                    new ParameterizedTypeReference<List<UsuarioEmailDto>>() {
+                    });
             return response.getBody();
 
         } catch (Exception e) {
             System.err.println("Error al obtener usuarios por rol (A2A): " + e.getMessage());
-            System.err.println("Asegúrate de que api-usuarios (8080) esté corriendo y que INTERNAL_API_KEY sea correcta en ambos servicios.");
+            System.err.println(
+                    "Asegúrate de que api-usuarios (8080) esté corriendo y que INTERNAL_API_KEY sea correcta en ambos servicios.");
             return Collections.emptyList();
         }
     }
@@ -60,7 +61,7 @@ public class UsuarioServiceClient {
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
 
-        String url = USUARIOS_API_URL + "/internal/by-ids?ids=" + idsComoString;
+        String url = usuariosApiUrl + "/internal/by-ids?ids=" + idsComoString;
 
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -71,8 +72,8 @@ public class UsuarioServiceClient {
                     url,
                     HttpMethod.GET,
                     entity,
-                    new ParameterizedTypeReference<List<UsuarioKardexDTO>>() {}
-            );
+                    new ParameterizedTypeReference<List<UsuarioKardexDTO>>() {
+                    });
 
             // Convertir la Lista de DTOs en un Mapa [ID -> Nombre] para fácil acceso
             if (response.getBody() == null) {
@@ -81,8 +82,7 @@ public class UsuarioServiceClient {
             return response.getBody().stream()
                     .collect(Collectors.toMap(
                             UsuarioKardexDTO::getIdUsuario,
-                            UsuarioKardexDTO::getNombreCompleto
-                    ));
+                            UsuarioKardexDTO::getNombreCompleto));
 
         } catch (Exception e) {
             System.err.println("Error al obtener nombres de usuarios (A2A): " + e.getMessage());

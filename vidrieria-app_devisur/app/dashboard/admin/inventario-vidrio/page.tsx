@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle, Loader2 } from "lucide-react";
 import { getToken } from "@/lib/auth";
 import { StockVidrio, TipoVidrio } from "@/lib/types";
-import { getAllStockVidrio } from "@/services/inventario/stockService";
+import { getAllStockVidrio, checkLowStockStatus } from "@/services/inventario/stockService";
 import { getTiposVidrio } from "@/services/catalogo/tipoVidrioService";
 import { StockVidrioCard } from "@/components/adminInventario/StockVidrioCard";
 import { HistorialDialog } from "@/components/adminInventario/HistorialDialog";
 import { AddStockVidrioDialog } from "@/components/adminInventario/AddStockVidrioDialog";
 import { EditStockVidrioDialog } from "@/components/adminInventario/EditStockVidrioDialog";
 import { DeleteStockVidrioDialog } from "@/components/adminInventario/DeleteStockVidrioDialog";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 export default function InventarioVidrioPage() {
   const [stock, setStock] = useState<StockVidrio[]>([]);
@@ -26,26 +27,35 @@ export default function InventarioVidrioPage() {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  
+
+  const [lowStockCount, setLowStockCount] = useState(0);
+  const [needsCleanup, setNeedsCleanup] = useState(false);
+
   // El item seleccionado para CUALQUIER acción (Editar, Borrar, Historial)
   const [selectedStockItem, setSelectedStockItem] = useState<StockVidrio | null>(null);
 
   // --- Función central para cargar datos ---
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async (triggeredByUpdate = false) => {
     setIsLoading(true);
     setError(null);
     try {
       // Cargar los tipos de vidrio (para el dropdown y los nombres)
       // Usamos .content porque getTiposVidrio devuelve un objeto de paginación
-      const tiposData = await getTiposVidrio(token); 
+      const tiposData = await getTiposVidrio(token);
       const tiposMap = new Map(
         tiposData.content.map((tipo: TipoVidrio) => [tipo.idTipoVidrio, tipo.nombre])
       );
       setTiposVidrio(tiposMap);
 
-      // Cargar el stock (getAllStockVidrio devuelve un array simple)
       const stockData = await getAllStockVidrio(token);
       setStock(stockData);
+
+      const status = await checkLowStockStatus(token);
+      setLowStockCount(status.lowStockItemCount || 0);
+
+      if (triggeredByUpdate) {
+        setNeedsCleanup(true);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al cargar datos.");
     } finally {
@@ -58,9 +68,22 @@ export default function InventarioVidrioPage() {
     loadData();
   }, [loadData]);
 
+  // *** NUEVO useEffect para la limpieza (Cierre de Diálogos Post-Carga) ***
+  useEffect(() => {
+    // Cierra los diálogos SOLO cuando la carga termina y hay una limpieza pendiente.
+    if (!isLoading && needsCleanup) {
+      setIsAddOpen(false);
+      setIsEditOpen(false);
+      setIsDeleteOpen(false);
+      setIsHistorialOpen(false);
+      setSelectedStockItem(null);
+      setNeedsCleanup(false); // Resetear la bandera
+    }
+  }, [isLoading, needsCleanup]);
+
   // --- Handlers para abrir los diálogos ---
   const handleOpenAdd = () => setIsAddOpen(true);
-  
+
   const handleOpenHistorial = (item: StockVidrio) => {
     setSelectedStockItem(item);
     setIsHistorialOpen(true);
@@ -87,7 +110,7 @@ export default function InventarioVidrioPage() {
     // Vuelve a cargar los datos
     loadData();
   };
-  
+
   const handleClose = () => {
     setIsAddOpen(false);
     setIsEditOpen(false);
@@ -95,7 +118,9 @@ export default function InventarioVidrioPage() {
     setIsHistorialOpen(false);
     setSelectedStockItem(null);
   };
-
+  const handleUpdateAndRefresh = () => {
+    loadData(true);
+  };
   const getNombreVidrio = (idVidrio: number) => {
     return tiposVidrio.get(idVidrio) || `ID ${idVidrio}`;
   };
@@ -108,7 +133,14 @@ export default function InventarioVidrioPage() {
           Añadir Stock
         </Button>
       </div>
-
+      {lowStockCount > 0 && !isLoading && (
+        <Alert variant="default" className="mb-4 border-yellow-500 bg-yellow-500/10 text-yellow-800">
+          <AlertTitle>⚠️ Alerta de Stock Bajo</AlertTitle>
+          <AlertDescription>
+            Hay **{lowStockCount}** items (materiales y/o vidrios) con stock bajo. Revise el inventario.
+          </AlertDescription>
+        </Alert>
+      )}
       {isLoading && (
         <div className="flex justify-center items-center h-64">
           <Loader2 className="w-8 h-8 animate-spin" />
@@ -130,17 +162,17 @@ export default function InventarioVidrioPage() {
           ))}
         </div>
       )}
-      
+
       {/* --- Renderizado de todos los Diálogos --- */}
-      
+
       <HistorialDialog
         isOpen={isHistorialOpen}
         onClose={handleClose}
         itemType="vidrio"
         itemId={selectedStockItem?.idStockVidrio || null}
-        itemName={selectedStockItem ? 
-            `${getNombreVidrio(selectedStockItem.idVidrio)} ${selectedStockItem.espesor}mm (${selectedStockItem.ancho}x${selectedStockItem.alto})` 
-            : ""}
+        itemName={selectedStockItem ?
+          `${getNombreVidrio(selectedStockItem.idVidrio)} ${selectedStockItem.espesor}mm (${selectedStockItem.ancho}x${selectedStockItem.alto})`
+          : ""}
       />
 
       <AddStockVidrioDialog
@@ -149,7 +181,7 @@ export default function InventarioVidrioPage() {
         onStockAdded={handleCloseAndRefresh}
         tiposVidrioMap={tiposVidrio}
       />
-      
+
       <EditStockVidrioDialog
         isOpen={isEditOpen}
         onClose={handleClose}
