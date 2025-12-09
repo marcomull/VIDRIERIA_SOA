@@ -53,7 +53,7 @@ export function UserProfileContent() {
 
     const handleUpdateProfile = async (formData: ProfileFormData) => {
         try {
-            const response = await fetch(`http://localhost:8080/usuarios/update-profile`, {
+            const response = await fetch(`http://localhost:8000/usuarios/update-profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
